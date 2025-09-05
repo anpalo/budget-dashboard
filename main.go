@@ -160,7 +160,7 @@ func printMonthlyTotals(monthlyTotals map[string]MonthCatTotals){
 	            continue
 	        }
 	        pct := (total / monthTotal) * 100
-	        p.Printf(" %s: %d원 (%.1f%%)\n", cat, int64(total), pct)
+	        p.Printf(" %s: %d원 (%.2f%%)\n", cat, int64(total), pct)
 	    }
     }
 }
@@ -233,12 +233,12 @@ func printYearlyTotals(categoryTotals map[string]float64, yearlyTotal float64){
 	p.Printf("Yearly Total Spending: %d원\n", int64(yearlyTotal))
 	for _, t := range totals {
 		pct := (t.Total / yearlyTotal) * 100
-        p.Printf("%s: %d원 (%.1f%%)\n", t.Category, int64(t.Total), pct)
+        p.Printf("%s: %d원 (%.2f%%)\n", t.Category, int64(t.Total), pct)
     }
 }
 
 func main() {
-	budget, headers, err := parseCSV("/Users/andrewlockdall/Downloads/ExampleBudget.csv")
+	budget, headers, err := parseCSV("./ExampleBudget.csv")
 	if err != nil {
 		fmt.Println("Failed to parse CSV:", err)
 		return
