@@ -1,7 +1,6 @@
 /*
 TODO:
 - Highest and lowest spending categories per month.
-
 */
 
 package budget 
@@ -24,9 +23,14 @@ type BudgetRow struct {
 	DailyTotal float64
 }
 
+type CatTotal struct {
+	Category string
+	Total float64
+}
+
 type MonthCatTotals struct {
 	Month  string
-	Totals map[string]float64
+	Totals []CatTotal
 }
 
 type YearlyCatTotals struct {
@@ -108,11 +112,12 @@ func ComputeMonthlyTotals(budget []BudgetRow) map[string]MonthCatTotals{
 	monthlyTotals := make(map[string]MonthCatTotals)
 	for _, row := range budget {
 		month := strings.Split(row.Date, "-")[1] // to get month
-		m, exists := monthlyTotals[month]
+
+		monthData, exists := monthlyTotals[month]
 		if !exists {
-			m = MonthCatTotals{
+			monthData = MonthCatTotals{
 				Month: month, 
-				Totals: make(map[string]float64),
+				Totals: []CatTotal{},
 			}
 		}
 
@@ -120,32 +125,51 @@ func ComputeMonthlyTotals(budget []BudgetRow) map[string]MonthCatTotals{
 			if skipCategories[cat] {
 				continue
 			}
-			m.Totals[cat] += val
+
+			found := false
+			for i := range monthData.Totals {
+				if monthData.Totals[i].Category == cat {
+					monthData.Totals[i].Total += val
+					found = true
+					break
+				}
+			}
+			if !found{
+				monthData.Totals = append(monthData.Totals, CatTotal{Category: cat, Total: val})
+			}
 		}
-		monthlyTotals[month] = m
-	}
-	return monthlyTotals
+
+        sort.Slice(monthData.Totals, func(i, j int) bool {
+            return monthData.Totals[i].Total > monthData.Totals[j].Total
+        })
+
+        monthlyTotals[month] = monthData
+    }
+
+    return monthlyTotals
 }
 
 func PrintMonthlyTotals(monthlyTotals map[string]MonthCatTotals){
-	for _, m := range monthlyTotals {
+	months := []string{"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
+	p := message.NewPrinter(language.Korean)
+
+	for _, month := range months {
+		m, exists := monthlyTotals[month]
+		if !exists {
+			continue
+		}
+	
     	monthTotal := 0.0
-    	for cat, val := range m.Totals {
-        	if skipCategories[cat] {
-            	continue
-        	}
-        	monthTotal += val
+    	for _, ct := range m.Totals {
+        	monthTotal += ct.Total
     	}
-    	p := message.NewPrinter(language.Korean)
+    	
 	    fmt.Printf("Month: %s\n", m.Month)
 	    p.Printf(" Total Monthly Spending: %d원\n", int64(monthTotal))
 
-	    for cat, total := range m.Totals {
-	        if skipCategories[cat] {
-	            continue
-	        }
-	        pct := (total / monthTotal) * 100
-	        p.Printf(" %s: %d원 (%.2f%%)\n", cat, int64(total), pct)
+	    for _, ct := range m.Totals {
+	        pct := (ct.Total / monthTotal) * 100
+	        p.Printf(" %s: %d원 (%.2f%%)\n", ct.Category, int64(ct.Total), pct)
 	    }
     }
 }
@@ -159,11 +183,11 @@ func ComputeMonthlyAverages(budget []BudgetRow, monthlyTotals map[string]MonthCa
 	averages := make(map[string]float64)
 	for month, totals := range monthlyTotals {
 		monthTotal := 0.0
-		for cat, val := range totals.Totals {
-			if skipCategories[cat] {
+		for _, ct := range totals.Totals {
+			if skipCategories[ct.Category] {
 				continue
 			}
-			monthTotal += val
+			monthTotal += ct.Total
 		}
 		averages[month] = monthTotal / float64(dayCounts[month])
 	}
