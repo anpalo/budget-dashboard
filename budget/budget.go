@@ -1,8 +1,3 @@
-/*
-TODO:
-- Highest and lowest spending categories per month.
-*/
-
 package budget 
 
 import (
@@ -163,7 +158,7 @@ func PrintMonthlyTotals(monthlyTotals map[string]MonthCatTotals){
     	for _, ct := range m.Totals {
         	monthTotal += ct.Total
     	}
-    	
+
 	    fmt.Printf("Month: %s\n", m.Month)
 	    p.Printf(" Total Monthly Spending: %d원\n", int64(monthTotal))
 
@@ -203,10 +198,32 @@ func PrintAllMonthAverages(averages map[string]float64) {
     months := []string{"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
     p := message.NewPrinter(language.Korean)
 
-    fmt.Println("Average Daily gSpending by Month:")
+    fmt.Println("Average Daily Spending by Month:")
     for _, m := range months {
         p.Printf("%s: %d원\n", m, int64(averages[m]))
     }
+}
+
+func PrintHighestSpendingCategory(monthlyTotals map[string]MonthCatTotals){
+	months := []string{"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
+	p := message.NewPrinter(language.Korean)
+	
+	for _, month := range months {
+		m, exists := monthlyTotals[month]
+		if !exists {
+			continue
+		}
+		maxTotal := 0.0
+		maxCat := ""
+    	for _, ct := range m.Totals {
+        	if ct.Total > maxTotal {
+        		maxTotal = ct.Total
+        		maxCat = ct.Category
+        	}
+    	}
+		p.Printf("In %s, you spent the most on %s (%d원)\n", month, maxCat, int64(maxTotal))
+	}
+
 }
 
 func ComputeYearlyTotals(budget []BudgetRow, headers []string) (map[string]float64, float64){ 

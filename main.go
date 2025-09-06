@@ -1,6 +1,6 @@
 /*
 TODO:
-- Add Currency Conversion Capability using API
+g- Add Currency Conversion Capability using API
 - Add stock viewing / update option using API
 */
 
@@ -24,6 +24,7 @@ func main() {
 
 	monthlyTotals := budget.ComputeMonthlyTotals(rows)
 	budget.PrintMonthlyTotals(monthlyTotals)
+	budget.PrintHighestSpendingCategory(monthlyTotals)
 
 	yearlyCategoryTotals, yearlyTotal := budget.ComputeYearlyTotals(rows, headers)
 	budget.PrintYearlyTotals(yearlyCategoryTotals, yearlyTotal)
