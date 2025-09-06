@@ -1,6 +1,6 @@
 /*
 TODO:
-g- Add Currency Conversion Capability using API
+- Add Currency Conversion Capability using API
 - Add stock viewing / update option using API
 */
 
@@ -9,6 +9,7 @@ package main
 import (
 	"fmt"
 	"budget-dashboard/budget"
+	"budget-dashboard/currencies"
 )
 
 func main() {
@@ -31,4 +32,11 @@ func main() {
 
 	averages := budget.ComputeMonthlyAverages(rows, monthlyTotals)
 	budget.PrintAllMonthAverages(averages)
+
+	rates, err := currencies.GetRates()
+	if err != nil {
+	    fmt.Println("Error fetching rates:", err)
+	    return
+	}
+	fmt.Println("Rates:", rates)
 }
