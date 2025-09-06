@@ -48,15 +48,3 @@ func GetRates() (map[string]float64, error) {
 
 }
 
-func main() {
-
-	rates, err := GetRates()
-	if err != nil {
-	    fmt.Println("Error fetching rates:", err)
-	    return
-	}
-	fmt.Println("Rates:", rates)
-
-}
-
-
