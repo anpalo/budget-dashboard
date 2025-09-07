@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"budget-dashboard/budget"
 	"budget-dashboard/currencies"
+	"budget-dashboard/stocks"
 )
 
 func main() {
@@ -39,4 +40,15 @@ func main() {
 	    return
 	}
 	fmt.Println("Rates:", rates)
+
+	matches, err := stocks.SearchSymbol("KO")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	for _, match := range matches {
+        fmt.Printf("%s (%s) - %s, %s\n", match.Symbol, match.Name, match.Region, match.Currency)
+	
+	}
+
 }
