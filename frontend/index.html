@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Budget Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Budget Dashboard</h1>
+
+  <div style="width: 600px; margin: auto;">
+    <canvas id="myChart"></canvas>
+  </div>
+
+  <script>
+    fetch("/api/monthly-totals")
+      .then(res => res.json())
+      .then(data => {
+        const month = "Jan"; // pick the month you want to visualize
+        const categories = data[month].Totals.map(entry => entry.Category);
+        const values = data[month].Totals.map(entry => entry.Total);
+
+        console.log("Categories:", categories);
+        console.log("Values:", values);
+
+        new Chart(document.getElementById("myChart"), {
+          type: "pie", // pie is nice for categories, you can change to 'bar'
+          data: {
+            labels: categories,
+            datasets: [{
+              label: month + " Spending",
+              data: values,
+              backgroundColor: [
+                "rgba(17, 133, 63, 1)",
+                "rgba(2, 96, 247, 1)",
+                "rgba(255, 0, 60, 1)",
+                "rgba(161, 0, 115, 1)",
+                "rgba(255, 201, 41, 1)",
+                "rgba(255, 134, 41, 1)",
+                "rgba(89, 230, 255, 1)",
+                "rgba(6, 252, 142, 1)"
+              ]
+            }]
+          },
+          options: {
+            responsive: true
+          }
+        });
+      })
+      .catch(err => console.error("Error fetching data:", err));
+  </script>
+</body>
+</html>
