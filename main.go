@@ -11,6 +11,8 @@ import (
 	"budget-dashboard/budget"
 	"budget-dashboard/currencies"
 	"budget-dashboard/stocks"
+	"net/http"
+	"encoding/json"
 )
 
 func main() {
@@ -70,6 +72,18 @@ func main() {
     fmt.Printf("%s (%s) | Latest Price: %s %s\n",
     chosenName, chosenSymbol, latestPrice, matches[0].Currency)
 
+
+    http.HandleFunc("/api/monthly-totals", api.MonthlyTotalsHandler(monthlyTotals))
+    http.HandleFunc("/api/currency", api.CurrencyConversionHandler())
+	http.HandleFunc("/api/stocks", api.StocksHandler())
+	http.HandleFunc("/api/symbol-search", api.SymbolSearchHandler())
+
+
+	fs := http.FileServer(http.Dir("./frontend"))
+	http.Handle("/", fs)
+
+	fmt.Println("Server running at http://localhost:8080")
+	http.ListenAndServe(":8080", nil)
 }
 
 
