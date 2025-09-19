@@ -1,54 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Budget Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<title>Budget Dashboard Placeholder</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<style>
+
+  body {
+    background-color: #000101;
+      color: #ffffff; 
+      font-family: "Saira", sans-serif;
+      margin: 10px;
+
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-rows: 80px 150px 70px 100px 80px 80px;
+    grid-template-columns: 100px 180px 170px 227px 227px 270px;
+    grid-template-areas:
+      "i i i i i i"
+      "h a a c d d"
+      "h f f c d d"
+      "h f f g g g"
+      "h f f g g g"
+      "h f f g g g";
+    gap: 20px;
+  }
+
+  .dashboard-grid > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 8px;
+    color: white;
+  }
+
+  .i { grid-area: i; background-color: #0b2121; border-style: solid; border-color: coral;}
+  .h { grid-area: h; background-color: #0b2121; border-style: solid; border-color: coral;}
+  .a { grid-area: a; background-color: #272852cc; }
+  .c { grid-area: c; background-color: #1b1c26; }
+  .d { grid-area: d; background-color: #1b1c26; }
+  .f { grid-area: f; background-color: #1b1c26; }
+  .g { grid-area: g; background-color: #1b1c26; }
+
+ 
+  
+</style>
 </head>
 <body>
-  <h1>Budget Dashboard</h1>
 
-  <div style="width: 600px; margin: auto;">
-    <canvas id="myChart"></canvas>
+
+<div class="dashboard-grid">
+  <div class="i"><h1>B</h1>
+</div>
+  <div class="h">H (Side Menu)</div>
+  <div class="a" id="totalSavingsWidget"></div>
+  <div class="c">
+    <canvas id="widgetPie"></canvas>
   </div>
+  <div class="d" style="position: relative;">
+  <canvas id="widgetBar"></canvas>
+</div>
+  <div class="f">
+  <canvas id="pieChart"></canvas>
+</div>
+  <div class="g">
+    <canvas id="stockChart"></canvas>
+  </div>
+</div>
 
-  <script>
-    fetch("/api/monthly-totals")
-      .then(res => res.json())
-      .then(data => {
-        const month = "Jan"; // pick the month you want to visualize
-        const categories = data[month].Totals.map(entry => entry.Category);
-        const values = data[month].Totals.map(entry => entry.Total);
 
-        console.log("Categories:", categories);
-        console.log("Values:", values);
 
-        new Chart(document.getElementById("myChart"), {
-          type: "pie", // pie is nice for categories, you can change to 'bar'
-          data: {
-            labels: categories,
-            datasets: [{
-              label: month + " Spending",
-              data: values,
-              backgroundColor: [
-                "rgba(17, 133, 63, 1)",
-                "rgba(2, 96, 247, 1)",
-                "rgba(255, 0, 60, 1)",
-                "rgba(161, 0, 115, 1)",
-                "rgba(255, 201, 41, 1)",
-                "rgba(255, 134, 41, 1)",
-                "rgba(89, 230, 255, 1)",
-                "rgba(6, 252, 142, 1)"
-              ]
-            }]
-          },
-          options: {
-            responsive: true
-          }
-        });
-      })
-      .catch(err => console.error("Error fetching data:", err));
-  </script>
+<!-- <script>
+fetch("/api/stocks?symbol=LULU")
+  .then(res => res.json())
+  .then(data => {
+    const dates = Object.keys(data).reverse();
+    const prices = dates.map(date => parseFloat(data[date]["4. close"]));
+
+    new Chart(document.getElementById("stockChart"), {
+      type: "line",
+      data: {
+        labels: dates,
+        datasets: [{
+          label: "LULU Closing Price",
+          data: prices,
+          borderColor: "#3BD6FF",
+          backgroundColor: "#69E4FF",
+          fill: false,
+          tension: 0.2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: "top" } },
+        scales: {
+          x: { title: { display: true, text: "Date" } },
+          y: { title: { display: true, text: "Price (USD)" } }
+        }
+      }
+    });
+  })
+  .catch(err => console.error("Error fetching stock data:", err));
+</script> -->
+
+
+
+<script>
+async function displayTotalSavings() {
+    try {
+        // 1. Fetch total savings from your API
+        const res = await fetch("/api/total-savings");
+        const data = await res.json();
+
+        // 2. Convert the string to number (you handle commas etc.)
+        const krwRaw = data.krw; // e.g., "95000000"
+        const krw = Number(krwRaw); // convert string to number
+
+        // 3. Fetch USD exchange rate
+        const resRates = await fetch("/api/currency");
+        const rates = await resRates.json();
+        const usdRate = rates["USD"] || 0;
+
+        // 4. Convert KRW to USD
+        const usd = krw * usdRate;
+
+        // 5. Display in the widget
+        const widget = document.getElementById("totalSavingsWidget");
+widget.innerHTML = `
+  <div style="position:relative; width:100%; height:100%;">
+    <!-- Header slightly down -->
+    <h2 style="font-size:1.7rem; color: #0085ff; position:absolute; top:5px; left:10px; margin:0;">Total Savings</h2>
+
+    <!-- KRW slightly below center -->
+    <div style="position:absolute; top:60%; left:50%; transform:translate(-50%, -50%); text-align:center;">
+      <div style="font-size:1.5rem; font-weight:bold;">
+        ${krw.toLocaleString('ko-KR')}원
+      </div>
+      <div style="font-size:1rem; color:#555; margin-top:4px;">
+        ${usd.toLocaleString(undefined, {maximumFractionDigits: 2})} USD
+      </div>
+    </div>
+  </div>
+`;
+
+    } catch (err) {
+        console.error("Error loading total savings:", err);
+        document.getElementById("totalSavingsWidget").innerText = "Error loading savings.";
+    }
+}
+
+// Call it immediately
+displayTotalSavings();
+</script>
+
+
+
+<script>
+  // Example data: category spending vs rest
+  const totalMonthly = 1117400;      // example from Jan
+  const categoryAmount = 450000;     // "Development" amount
+  const remaining = totalMonthly - categoryAmount;
+
+  const percent = ((categoryAmount / totalMonthly) * 100).toFixed(1) + "%";
+
+  // plugin to draw percentage inside
+  const centerText = {
+    id: "centerText",
+    afterDraw(chart) {
+      const { ctx, chartArea: { width, height } } = chart;
+      const lineHeight = 75
+      ctx.save();
+      ctx.font = "bold 18px Saira";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("Development", width / 2, height / 2 - lineHeight / 2);
+      ctx.font = "bold 36px Saira"; 
+      ctx.fillText(percent, width / 2, height / 2);
+      ctx.restore();
+    }
+  };
+
+  new Chart(document.getElementById("widgetPie"), {
+    type: "doughnut",
+    data: {
+      labels: ["Development", "Other"],
+      datasets: [{
+        data: [categoryAmount, remaining],
+        backgroundColor: [
+          "#FF3ECF", // colored category
+          "#2B2D30"  // gray remainder
+        ],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: "90%",
+      plugins: {
+        legend: { display: false }
+      }
+    },
+    plugins: [centerText]
+  });
+</script>
+
+<script>
+const jan = 800000;
+const feb = 950000;
+const mar = 750000;
+const apr = 830000;
+const may = 1000700;
+const jun = 1050000;
+const diff = jun - may;
+const diffColor = diff > 0 ? '#f20c3e' : 'limegreen';
+
+const ctxD = document.getElementById("widgetBar").getContext("2d");
+
+const topDiffLabel = {
+  id: 'topDiffLabel',
+  afterDraw(chart) {
+    const { ctx, chartArea: { width } } = chart;
+    ctx.save();
+    ctx.fillStyle = diffColor;
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
+
+    const beforeText = "Spending ";
+    const diffPart   = (diff > 0 ? "▲ ₩" : "▼ ") + Math.abs(diff).toLocaleString() + "원";
+    const afterText  = " in June";
+
+    const baseFont = '24px Saira';
+    const boldFont = 'bold 24px Saira';
+
+    // measure widths for centering
+    ctx.font = baseFont;
+    const beforeWidth = ctx.measureText(beforeText).width;
+    const afterWidth  = ctx.measureText(afterText).width;
+    ctx.font = boldFont;
+    const diffWidth   = ctx.measureText(diffPart).width;
+
+    const totalWidth = beforeWidth + diffWidth + afterWidth;
+    let x = width / 2 - totalWidth / 2;
+    const y = 24;
+
+    // draw before
+    ctx.font = baseFont;
+    ctx.fillText(beforeText, x, y);
+    x += beforeWidth;
+
+    // draw bold middle
+    ctx.font = boldFont;
+    ctx.fillText(diffPart, x, y);
+    x += diffWidth;
+
+    // draw after
+    ctx.font = baseFont;
+    ctx.fillText(afterText, x, y);
+
+    ctx.restore();
+  }
+};
+
+new Chart(ctxD, {
+  type: 'bar',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [{
+      data: [jan, feb, mar, apr, may, jun],
+      backgroundColor: ["#bfa1ccde","#d196b0de", "#c5d4a9cc","#97c9b4cc","#5d7d59de", "#d6d2879c"],
+      hoverBackgroundColor: ["#8100ba","#c9055a", "#67c700cc","#008f53","#0a5e00", "#d1c900"],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false, // fill the div
+    layout: { padding: { top: 20, bottom: 10, left: 10, right: 10 } }, // leave space for top diff
+    plugins: {
+      legend: { display: false },
+      datalabels: {
+        anchor: 'center',
+        align: 'center',
+        color: '#FFFFFF',
+        font: { weight: 'bold', size: 10 },
+        formatter: value => "₩" + value.toLocaleString()
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        beginAtZero: true,
+        display: false,
+        suggestedMax: Math.max(jan, feb, mar, apr, may, jun) * 1.2
+      }
+    }
+  },
+  plugins: [ChartDataLabels, topDiffLabel]
+});
+</script>
+
+<script>
+fetch("/api/monthly-totals")
+  .then(res => res.json())
+  .then(data => {
+    const month = "Jan";
+    const categories = data[month].Totals.map(entry => entry.Category);
+    const totals = data[month].Totals.map(entry => entry.Total);
+    const txt = "Spending by Category in " + month
+ const centerText = {
+    id: "centerText",
+    afterDraw(chart) {
+      const { ctx, chartArea: { width, height } } = chart;
+      ctx.save();
+      ctx.font = "bold 18px Saira";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "top";
+      ctx.textBaseline = "middle";
+      ctx.fillText(txt, 15, 30);
+      ctx.restore();
+    }
+  };
+
+    new Chart(document.getElementById("pieChart"), {
+      type: "doughnut",
+      data: {
+        labels: categories,
+        datasets: [{
+          label: month + " Spending",
+          data: totals,
+          backgroundColor: [
+            "#ff21c7", //  pink
+            "#FF6F00", //  orange
+            "#8605f2", //  purple
+            "#191cff", //  blue
+            "#ffe500", // yellow
+            "#00FFFF", // cyan
+            "#ff194d", // red
+            "#52FF88"  // green
+
+          ],
+          borderWidth: 0
+
+        }]
+      },
+      options: { 
+        animation: {
+          animateRotate: true
+        },
+        cutout: '80%', // thinner ring
+        radius: '100%',
+        responsive: true,
+        maintainAspectRatio: false, // fill the div
+        layout: { padding: { top: 70, bottom: 30, left: 50, right: 50 } }, 
+         plugins: {
+        legend: { display: false }
+      }
+      },
+         
+          plugins: [centerText]
+
+    });
+  })
+  .catch(err => console.error("Error fetching monthly totals:", err));
+</script>
+
+<script>
+//testing
+
+  const dates = ["2025-09-10", "2025-09-11", "2025-09-12", "2025-09-13", "2025-09-14", "2025-09-15", "2025-09-16", "2025-09-17", "2025-09-18", "2025-09-19", "2025-09-20", "2025-09-21"];
+  const prices = [200, 205, 102, 195, 204, 190, 262, 225, 239, 200, 176, 159];
+  const firstPrice = prices[0]
+  const lastPrice = prices[prices.length-1]
+  const lineColor = lastPrice >= firstPrice ? 'lightgreen' : '#f20c3e';
+  new Chart(document.getElementById("stockChart"), {
+    type: "line",
+    data: {
+      labels: dates,
+      datasets: [{
+        label: "LULU Closing Price",
+        data: prices,
+        borderColor: lineColor,        // hex
+        backgroundColor: lineColor,  // hex with alpha
+        fill: false,
+        tension: 0
+      }]
+    },
+    options: {
+  responsive: true,
+  plugins: { 
+    legend: { 
+      position: "top",
+      labels: {
+        font: {
+          family: "Saira",   // <-- apply Saira here
+          size: 14,          // you can adjust size
+          weight: "bold"     // or "normal"
+        }
+      }
+    }
+  },
+  scales: {
+    x: { 
+      title: { 
+        display: true, 
+        text: "Date", 
+        font: { family: "Saira", size: 16 }   // x-axis title font
+      },
+      ticks: { font: { family: "Saira", size: 10 } } // x-axis tick labels
+    },
+    y: { 
+      title: { 
+        display: true, 
+        text: "Price (USD)", 
+        font: { family: "Saira", size: 16 }   // y-axis title font
+      },
+      ticks: { font: { family: "Saira", size: 12 } } // y-axis tick labels
+    }
+  }
+}
+
+  });
+</script>
+
+
 </body>
 </html>
