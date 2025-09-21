@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
+
+<body>
+
+  <div class="dashboard-grid">
+    <header class="top-bar">Budget Dashboard</header>
+    <aside class="side-menu">Menu</aside>
+    <main class="main-content">
+      <!-- Widgets go here -->
+      <div class="widget" id="totalSavingsWidget">Total Savings</div>
+      <div class="widget">
+      <canvas id="widgetPie"></canvas>
+    </div>
+    <div class="widget">
+      <canvas id="pieChart"></canvas>
+    </div>
+      <div class="widget" id="widgetBar"></div>
+      <div class="widget" id="stockChart"></div>
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="dashboard.js"></script>
+  <script src="pie.js"></script>
+
+
+</body>
+</html>
+
+
