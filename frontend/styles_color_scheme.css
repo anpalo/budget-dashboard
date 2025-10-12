@@ -1,0 +1,245 @@
+/* color_scheme.html */
+body {
+  background-image: url('dark_background.jpg');
+  background-size: cover;
+  min-height: 99vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0E1319;       /* backup 0E1319*/
+  color: #ffffff;
+  font-family: "Saira", sans-serif;
+  margin: 1px;
+  transition: background-image 0.5s ease-in-out;
+}
+
+
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns:1.2fr 1.4fr 2fr 1.5fr 1.5fr;
+    grid-template-rows:
+    clamp(20px, 8vh, 40px)
+    clamp(100px, 16vh, 260px)
+    clamp(70px, 12vh, 190px)
+    clamp(80px, 14vh, 250px)
+    clamp(140px, 14vh, 250px)
+    clamp(140px, 14vh, 250px);
+
+  gap: 1.5%;
+  padding: 1.5%;
+  height: 100%;
+  box-sizing: border-box;
+  grid-template-areas:
+    "i i i i i"
+    "a a g g g"
+    "f f g g g"
+    "f f g g g"
+    "f f c d d"
+    "f f c d d";
+}
+
+.dashboard-grid > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-radius: 8px;
+  color: white;
+}
+
+
+.topBanner { grid-area: i; background-color: #141F1000; border-style: solid; border-color: #141F1000; border-width: .05em}
+.totalSavings { grid-area: a; background-color: #625DFF17; border-style: solid; border-color: #625DFF17; border-width: .05em}
+.mainPie { grid-area: f; background-color: #FF005712; border-style: solid; border-color: #FF005712; border-width: .05em}
+.cyclePie { grid-area: c; background-color: #7000841C; border-style: solid; border-color: #7000841C; border-width: .05em}
+.stockWidget { grid-area: g; background-color: #00664838; border-style: solid; border-color: #00664838; border-width: .05em}
+.monthBar { grid-area: d; background-color: #00415E17; border-style: solid; border-color: #00415E17; border-width: .05em}
+
+
+.fill-btn {
+  background-color: #2B27274F;	
+  border-color: #123456;
+  position: flex; 
+  z-index: 10;
+}
+
+.border-color-btn {
+  background-color: #2B27274F;	
+  border-color: #123456;
+  position: flex; 
+  z-index: 10;
+}
+
+.topbanner {
+  position: relative;
+  z-index: 3;
+}
+
+
+
+.topBanner {
+  color: #FFFFFF;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  display: flex;
+  gap: 1em;
+}
+
+.topBanner h1{
+	font-size:  1.5em;
+}
+.font-color-btn {
+  background-color: #2B27274F;
+  border-color: #123456;
+  position: flex;     
+  z-index: 10;
+}
+
+.buttonRow {
+  display: flex;
+  flex-direction: row; 
+  gap: 1em;
+}
+
+.pickr {
+  background: transparent !important;
+  box-shadow: none !important; /* optional if you want to remove the shadow too */
+}
+
+.pickr .pcr-button {
+    height: .5em;         
+    width: .5em;
+    border-radius: .25em; 
+    background-color: #000000; 
+    background-image: none;    
+    cursor: pointer;
+}
+
+
+.totalSavings {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;       
+  justify-content: center;   
+  font-family: Saira, sans-serif;
+  overflow: hidden;
+  gap: 1em;
+}
+
+
+.mainPie {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;    
+  justify-content: flex-start;
+  padding-top: 5%;
+  overflow: hidden;
+  gap: 1em;
+}
+
+
+.cyclePie {
+  position: relative;
+  width: 100%;
+  height: 100% ;
+  display: flex;
+  flex-direction: column;
+  align-items: center;       
+  justify-content: center;   
+  font-family: Saira, sans-serif;
+  overflow: hidden;
+  gap: .5em;
+}
+
+.stockWidget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: .5%;
+  z-index: 0;
+  gap: 1em;
+}
+
+.monthBar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: .5%;
+  z-index: 0;
+  gap: .5em;
+}
+
+#hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: fixed;  
+  top: 4%;
+  left: 2%;
+  z-index: 5;     
+  padding: 0;
+}
+
+#hamburger svg {
+  width: clamp(24px, 2vw, 38px);   
+  height: auto;                     
+}
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0px;                     
+  height: 100vh;
+  padding-top: 5%;             
+  background-color: #0E1319CC;
+  overflow: hidden;
+  pointer-events: none;        
+  transition: width 0.5s ease;
+  z-index: 4;
+}
+
+#sidebar.open {
+  width: 12vw;
+  pointer-events: auto;         
+  padding-top: 5%;             
+  padding-left: 1%;
+}
+
+.sidebar-item {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: clamp(0.7rem, 2vw, 1rem); 
+  display: flex;
+  align-items: center;
+  padding: .5em .7em;
+  cursor: pointer;
+  z-index: 3;
+  white-space: nowrap;
+  transform: translateX(-150px);
+  transition: transform 0.8s ease;
+}
+
+#sidebar.open .sidebar-item {
+  transform: translateX(0);
+}
+
+.sidebar-item a {
+    color: #FFFFFF;        
+    text-decoration: none; 
+}
+
+.sidebar-item:hover {
+  background: rgba(255,255,255,0.1); 
+}
+
+
+
