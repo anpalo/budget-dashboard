@@ -1,6 +1,6 @@
 /* color_scheme.html */
 body {
-  background-image: url('dark_background.jpg');
+  /*background-image: url('dark_background.jpg');*/
   background-size: cover;
   min-height: 99vh;
   background-position: center;
@@ -57,10 +57,18 @@ body {
 .monthBar { grid-area: d; background-color: #00415E17; border-style: solid; border-color: #00415E17; border-width: .05em}
 
 
+
 .fill-btn {
   background-color: #2B27274F;	
   border-color: #123456;
   position: flex; 
+  z-index: 10;
+}
+
+.font-color-btn {
+  background-color: #2B27274F;
+  border-color: #123456;
+  position: flex;     
   z-index: 10;
 }
 
@@ -90,12 +98,7 @@ body {
 .topBanner h1{
 	font-size:  1.5em;
 }
-.font-color-btn {
-  background-color: #2B27274F;
-  border-color: #123456;
-  position: flex;     
-  z-index: 10;
-}
+
 
 .buttonRow {
   display: flex;

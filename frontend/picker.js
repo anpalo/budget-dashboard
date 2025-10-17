@@ -146,9 +146,9 @@ document.querySelectorAll('.monthBar').forEach(div => {
     createColorPicker(fillBtn, div, '#00415E17', 'borderColor');  
 });
 
+/* BACKGROUND */
 
-
-
-
+const bodyFillBtn = document.querySelector('.fill-btn');
+createColorPicker(bodyFillBtn, document.body, '#0E1319', 'backgroundColor');
 
 
