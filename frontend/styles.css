@@ -1,0 +1,272 @@
+/*index.html*/
+body {
+  background-image: url('dark_background.jpg');
+  background-size: cover;
+  min-height: 99vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0E1319;       /* backup 0E1319 */
+  color: #ffffff;
+  font-family: "Saira", sans-serif;
+  margin: 1px;
+  transition: background-image 0.5s ease-in-out;
+}
+
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns:1.2fr 1.4fr 2fr 1.5fr 1.5fr;
+    grid-template-rows:
+    clamp(20px, 8vh, 40px)
+    clamp(100px, 16vh, 260px)
+    clamp(70px, 12vh, 190px)
+    clamp(80px, 14vh, 240px)
+    clamp(140px, 14vh, 240px)
+    clamp(140px, 14vh, 240px);
+
+  gap: 1.7%;
+  padding: 1.5%;
+  height: 100%;
+  box-sizing: border-box;
+  grid-template-areas:
+    "i i i i i"
+    "a a g g g"
+    "f f g g g"
+    "f f g g g"
+    "f f c d d"
+    "f f c d d";
+}
+
+.dashboard-grid > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-radius: 8px;
+  color: white;
+}
+
+
+.topBanner { grid-area: i; background-color: #141F1000; border-style: solid; border-color: #141F1000; border-width: .05em}
+.totalSavings { grid-area: a; background-color: #625DFF17; border-style: solid; border-color: #625DFF17; border-width: .03em}
+.mainPie { grid-area: f; background-color: #FF005712; border-style: solid; border-color: #FF005712; border-width: .05em}
+.cyclePie { grid-area: c; background-color: #7000841C; border-style: solid; border-color: #7000841C; border-width: .05em}
+.stockWidget { grid-area: g; background-color: #00664838; border-style: solid; border-color: #00664838; border-width: .05em}
+.monthBar { grid-area: d; background-color: #00415E17; border-style: solid; border-color: #00415E17; border-width: .05em}
+
+/* Total Savings Widget */
+.totalSavings {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;       
+  justify-content: center;   
+  font-family: Saira, sans-serif;
+  overflow: hidden;
+}
+
+.widget-title {
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  font-size: clamp(0.5rem, 1.5vw + 1vh, 1.2rem);
+  color: #0085ff;
+  opacity: 0.3;             
+  margin: 0;
+}
+
+.amount-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.amount-krw {
+  font-size: clamp(.5rem, 2vw, 2.4rem);
+  font-weight: bold;
+  color: #FFFFFF;              
+  margin-top: 10%;
+}
+
+.amount-usd {
+  font-size: clamp(0.3rem, 2vw, 1rem);
+  color: #aaa;               /* lighter for secondary text */
+}
+
+
+.cyclePie {
+  position: relative;
+  width: 100%;
+  height: 100% ;
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* center horizontally */
+  justify-content: center;   /* center vertically */
+  font-family: Saira, sans-serif;
+  overflow: hidden;
+}
+
+
+.mainPie {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;    
+  justify-content: flex-start;
+  padding-top: 5%;
+  overflow: hidden;
+}
+
+#monthList {
+  display: flex;
+  justify-content: center;
+  gap: 3%;
+  font-family: Saira;
+  font-size: clamp(0.3rem, 2vw, .9rem);
+  font-weight: bold;
+  margin-bottom: 6%;
+}
+
+#monthList span {
+  cursor: pointer;
+  color: gray;
+  transition: color 0.2s;
+}
+
+#monthList span.active {
+  color: white;
+}
+
+
+.stockWidget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: .5%;
+  z-index: 0;
+}
+
+#stockName {
+  position: absolute;
+  top: 3%;
+  left: 9%;
+  font-family: "Saira", sans-serif;
+  font-size: clamp(0.8rem, 2vw, 1.2rem); 
+  font-weight: bold;
+  color: white;
+  text-align: left;
+  z-index: 10;
+}
+
+#stockHeader {
+  position: absolute;
+  top: 3%;
+  left: 2%;
+  z-index: 10;
+
+}
+
+
+#stockLogo {
+  height: 40px;
+  width: 40px;
+}
+
+#stockStats {
+  position: absolute;
+  top: 3%;
+  right: 2%;
+  font-family: "Saira", sans-serif;
+  font-size: clamp(0.4rem, 1.5vw, .6rem); 
+  text-align: right;
+  line-height: 1.2;
+  color: white;
+  z-index: 10;
+}
+
+
+#stockChart {
+  width: 100%;
+  height: 100%;
+}
+
+#hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: fixed;  
+  top: 4%;
+  left: 2%;
+  z-index: 5;     
+  padding: 0;
+}
+
+#hamburger svg {
+  width: clamp(24px, 2vw, 38px);   
+  height: auto;  
+}
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0px;                     
+  height: 100vh;
+  padding-top: 5%;             
+  background-color: #0E1319CC;
+  overflow: hidden;
+  pointer-events: none;        
+  transition: width 0.5s ease;
+  z-index: 4;
+}
+
+#sidebar.open {
+  width: 12vw;
+  pointer-events: auto;         
+  padding-top: 5%;             
+  padding-left: 1%;
+}
+
+.sidebar-item {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: clamp(0.7rem, 2vw, 1rem); 
+  display: flex;
+  align-items: center;
+  padding: 0.5em .7em;
+  cursor: pointer;
+  z-index: 3;
+  white-space: nowrap;
+  transform: translateX(-150px);
+  transition: transform 0.8s ease;
+}
+
+#sidebar.open .sidebar-item {
+  transform: translateX(0);
+}
+
+.sidebar-item a {
+    color: #FFFFFF;        
+    text-decoration: none; 
+  }
+
+/*#overlay {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}*/
+
+.sidebar-item:hover {
+  background: rgba(255,255,255,0.1); 
+}
+
+.topbanner {
+  position: relative;
+  z-index: 3;
+}

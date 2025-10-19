@@ -2,7 +2,6 @@ package currencies
 
 import (
   "encoding/json"	
-  "fmt"
   "net/http"
   "net/url"
   "io/ioutil"

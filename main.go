@@ -1,8 +1,3 @@
-/*
-TODO:
-- Add Currency Conversion Capability using API
-- Add stock viewing / update option using API
-*/
 
 package main
 
@@ -16,10 +11,21 @@ import (
 )
 
 func main() {
-	rows, headers, err := budget.ParseCSV("./ExampleBudget.csv")
+
+	http.HandleFunc("/api/upload-csv", api.UploadCSVHandler)
+
+	db, err := ConnectDB()
 	if err != nil {
-		fmt.Println("Failed to parse CSV:", err)
-		return
+    	log.Fatal(err)
+	}
+	defer db.Close() 
+	fmt.Println("DB connected!")
+
+
+	rows, headers, err := budget.ParseCSV("./CurrentBudget.csv")
+	if err != nil {
+		fmt.Println("No CSV found, starting with empty data")
+		rows, headers = nil, nil
 	}
 
 	// for _, row := range budget {
@@ -81,12 +87,13 @@ func main() {
     http.HandleFunc("/api/monthly-totals", api.MonthlyTotalsHandler(monthlyTotals))
 	http.HandleFunc("/api/total-savings", api.TotalSavingsHandler(rows, headers))
     http.HandleFunc("/api/currency", api.CurrencyConversionHandler())
-	// http.HandleFunc("/api/stocks", api.StocksHandler())
-	// http.HandleFunc("/api/symbol-search", api.SymbolSearchHandler())
+	http.HandleFunc("/api/stocks", api.StocksHandler())
+	http.HandleFunc("/api/symbol-search", api.SymbolSearchHandler())
 
 
-	fs := http.FileServer(http.Dir("./frontend"))
-	http.Handle("/", fs)
+fs := http.FileServer(http.Dir("./frontend"))
+http.Handle("/", fs)
+
 
 	fmt.Println("Server running at http://localhost:8080")
 	http.ListenAndServe(":8080", nil)

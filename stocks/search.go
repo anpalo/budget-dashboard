@@ -2,6 +2,7 @@ package stocks
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"io/ioutil"
@@ -18,6 +19,7 @@ type SymbolMatch struct {
 	Timezone string `json:"7. timezone"`
 	Currency string `json:"8. currency"`
 	MatchScore string `json:"9. matchScore"`
+	LogoURL     string `json:"logo_url"`
 }
 
 type SymbolSearchResponse struct {
@@ -51,6 +53,11 @@ func SearchSymbol(searchString string) ([]SymbolMatch, error) {
 	if err := json.Unmarshal(body, &data); err != nil {
 		return nil, err
 
+	}
+
+	for i := range data.BestMatches {
+		symbol := data.BestMatches[i].Symbol
+		data.BestMatches[i].LogoURL = fmt.Sprintf("https://img.logokit.com/ticker/%s?token=%s", symbol, LOGO_KIT_API_KEY)
 	}
 
 	return data.BestMatches, nil
