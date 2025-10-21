@@ -14,25 +14,23 @@ func main() {
 
 	http.HandleFunc("/api/upload-csv", api.UploadCSVHandler)
 
-	db, err := ConnectDB()
+	db, err := budget.ConnectDB()
 	if err != nil {
     	log.Fatal(err)
 	}
 	defer db.Close() 
 	fmt.Println("DB connected!")
 
-
-	rows, headers, err := budget.ParseCSV("./CurrentBudget.csv")
+	dailyMap, err := budget.FetchDailyTotalsFromDB(db)
 	if err != nil {
-		fmt.Println("No CSV found, starting with empty data")
-		rows, headers = nil, nil
+		log.Fatal(err)
+	}
+	monthlyTotals, err:= budget.FetchMonthlyTotalsFromDB(dailyMap)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	// for _, row := range budget {
-	// 	budget.PrintBudgetRow(row, headers)
-	// }
 
-	monthlyTotals := budget.ComputeMonthlyTotals(rows)
 	budget.PrintMonthlyTotals(monthlyTotals)
 	budget.PrintHighestSpendingCategory(monthlyTotals)
 
