@@ -39,7 +39,7 @@ var skipCategories = map[string]bool{
 	"Monthly Sum":          true,
 	"Adjusted Monthly Sum": true,
 	"Net Month Income":     true,
-	"Yearly Savings Total": true,
+	"Total Savings": true,
 	"Daily Sum":            true,
 }
 
