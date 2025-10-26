@@ -2,22 +2,23 @@
 package main
 
 import (
+	"log"
 	"fmt"
 	"budget-dashboard/budget"
 	"budget-dashboard/currencies"
 	// "budget-dashboard/stocks"
-	"budget-dashboard/api"
+	// "budget-dashboard/api"
 	"net/http"
 )
 
 func main() {
 
-	http.HandleFunc("/api/upload-csv", api.UploadCSVHandler)
+	// http.HandleFunc("/api/upload-csv", api.UploadCSVHandler)
 
 	db, err := budget.ConnectDB()
 	if err != nil {
-    	log.Fatal(err)
-	}
+    	fmt.Println("DB connection error:", err)
+    }
 	defer db.Close() 
 	fmt.Println("DB connected!")
 
@@ -43,11 +44,11 @@ func main() {
 	fmt.Println("Rates:", rates)
 
 	
-    http.HandleFunc("/api/monthly-totals", api.MonthlyTotalsHandler(monthlyTotals))
-    http.HandleFunc("/api/currency", api.CurrencyConversionHandler())
+    // http.HandleFunc("/api/monthly-totals", api.MonthlyTotalsHandler(monthlyTotals))
+    // http.HandleFunc("/api/currency", api.CurrencyConversionHandler())
 
-	// http.HandleFunc("/api/total-savings", api.TotalSavingsHandler(rows, headers))
-	// http.HandleFunc("/api/stocks", api.StocksHandler())
+	// // http.HandleFunc("/api/total-savings", api.TotalSavingsHandler(rows, headers))
+	// // http.HandleFunc("/api/stocks", api.StocksHandler())
 	// http.HandleFunc("/api/symbol-search", api.SymbolSearchHandler())
 
 
