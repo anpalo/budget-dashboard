@@ -46,7 +46,6 @@ func ConnectDB() (*sql.DB, error){
 
 
 func FetchDailyTotalsFromDB(db *sql.DB) (map[string]map[string]float64, error) {
-	/* Next() and Scan() from database/sql package */
 	rows, err := db.Query("SELECT category, amount, expense_date FROM csv_data")
 	if err != nil {
 		return nil, err
@@ -117,6 +116,20 @@ func FetchMonthlyTotalsFromDB(dailyMap map[string]map[string]float64) (map[strin
 
 
 
+func GetTotalSavings(db *sql.DB) (float64, error) { 
+	var total float64
+	row := db.QueryRow("SELECT total_savings FROM budget_summary ORDER BY month DESC LIMIT 1;")
+	
+	err := row.Scan(&total)
+	if err != nil {
+		return 0, err
+	}
+
+	return total, nil
+}
+
+
+
 
 func PrintMonthlyTotals(monthlyTotals map[string]MonthCatTotals){
 	months := []string{"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
@@ -143,40 +156,7 @@ func PrintMonthlyTotals(monthlyTotals map[string]MonthCatTotals){
     }
 }
 
-// func ComputeMonthlyAverages(budget []BudgetRow, monthlyTotals map[string]MonthCatTotals) map[string]float64 {
-// 	dayCounts := make(map[string]int)
-// 	for _, row := range budget {
-// 		month := strings.Split(row.Date, "-")[1] // to get month
-// 		dayCounts[month] ++
-// 	}
-// 	averages := make(map[string]float64)
-// 	for month, totals := range monthlyTotals {
-// 		monthTotal := 0.0
-// 		for _, ct := range totals.Totals {
-// 			if skipCategories[ct.Category] {
-// 				continue
-// 			}
-// 			monthTotal += ct.Total
-// 		}
-// 		averages[month] = monthTotal / float64(dayCounts[month])
-// 	}
-// 	return averages
-// }
 
-// func PrintMonthAverage(month string, averages map[string]float64) {
-//     p := message.NewPrinter(language.Korean)
-//     p.Printf("Avg. Daily Spending in %s: %d원\n", month, int64(averages[month]))
-// }
-
-// func PrintAllMonthAverages(averages map[string]float64) {
-//     months := []string{"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
-//     p := message.NewPrinter(language.Korean)
-
-//     fmt.Println("Average Daily Spending by Month:")
-//     for _, m := range months {
-//         p.Printf("%s: %d원\n", m, int64(averages[m]))
-//     }
-// }
 
 func PrintHighestSpendingCategory(monthlyTotals map[string]MonthCatTotals){
 	months := []string{"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
@@ -200,63 +180,7 @@ func PrintHighestSpendingCategory(monthlyTotals map[string]MonthCatTotals){
 
 }
 
-// func ComputeYearlyTotals(budget []BudgetRow, headers []string) (map[string]float64, float64){ 
-// 	yearlyTotal := 0.0
-// 	totals := make(map[string]float64)
-// 	for _, h := range headers[1:] {
-// 		if skipCategories[h] {
-// 			continue
-// 		}
-// 		sum := 0.0
-// 		for _, row := range budget {
-// 			if val, ok := row.Values[h]; ok {
-// 				sum += val
-// 			}
-// 		}
-// 		totals[h] = sum
-// 		yearlyTotal += sum
-// 	}
-// 	return totals, yearlyTotal
-// }
 
-// func PrintYearlyTotals(categoryTotals map[string]float64, yearlyTotal float64){
-// 	var totals []YearlyCatTotals
-// 	for cat, total := range categoryTotals{
-// 		totals = append(totals, YearlyCatTotals{cat, total})
-// 	}
-// 	sort.Slice(totals, func(i, j int) bool {
-//     return totals[i].Total > totals[j].Total
-// 	})
-
-// 	p := message.NewPrinter(language.Korean)
-
-// 	p.Printf("Yearly Total Spending: %d원\n", int64(yearlyTotal))
-// 	for _, t := range totals {
-// 		pct := (t.Total / yearlyTotal) * 100
-//         p.Printf("%s: %d원 (%.2f%%)\n", t.Category, int64(t.Total), pct)
-//     }
-// }
-
-
-func GetTotalSavings(db *sql.DB) {
-	var total float64
-	query := `
-		SELECT category, SUM(amount)
-		FROM csv_data`
-}
-// func GetTotalSavings(budget []BudgetRow, headers []string) float64 {
-//     if len(budget) == 0 || len(headers) == 0 {
-//         return 0
-//     }
-
-//     firstRow := budget[0]
-//     lastHeader := headers[len(headers)-1] // last column = yearly savings total
-
-//     if val, ok := firstRow.Values[lastHeader]; ok {
-//         return val
-//     }
-//     return 0
-// }
 
 
 
