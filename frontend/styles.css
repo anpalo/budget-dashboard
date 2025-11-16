@@ -1,6 +1,6 @@
 /*index.html*/
 body {
-  background-image: url('dark_background.jpg');
+  background-image: url('images/dark_background.jpg');
   background-size: cover;
   min-height: 99vh;
   background-position: center;
@@ -54,6 +54,13 @@ body {
 .cyclePie { grid-area: c; background-color: #7000841C; border-style: solid; border-color: #7000841C; border-width: .05em}
 .stockWidget { grid-area: g; background-color: #00664838; border-style: solid; border-color: #00664838; border-width: .05em}
 .monthBar { grid-area: d; background-color: #00415E17; border-style: solid; border-color: #00415E17; border-width: .05em}
+
+
+
+.topbanner {
+  position: relative;
+  z-index: 3;
+}
 
 /* Total Savings Widget */
 .totalSavings {
@@ -191,82 +198,4 @@ body {
 #stockChart {
   width: 100%;
   height: 100%;
-}
-
-#hamburger {
-  background: none;
-  border: none;
-  cursor: pointer;
-  position: fixed;  
-  top: 4%;
-  left: 2%;
-  z-index: 5;     
-  padding: 0;
-}
-
-#hamburger svg {
-  width: clamp(24px, 2vw, 38px);   
-  height: auto;  
-}
-#sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0px;                     
-  height: 100vh;
-  padding-top: 5%;             
-  background-color: #0E1319CC;
-  overflow: hidden;
-  pointer-events: none;        
-  transition: width 0.5s ease;
-  z-index: 4;
-}
-
-#sidebar.open {
-  width: 12vw;
-  pointer-events: auto;         
-  padding-top: 5%;             
-  padding-left: 1%;
-}
-
-.sidebar-item {
-  text-decoration: none;
-  color: #FFFFFF;
-  font-size: clamp(0.7rem, 2vw, 1rem); 
-  display: flex;
-  align-items: center;
-  padding: 0.5em .7em;
-  cursor: pointer;
-  z-index: 3;
-  white-space: nowrap;
-  transform: translateX(-150px);
-  transition: transform 0.8s ease;
-}
-
-#sidebar.open .sidebar-item {
-  transform: translateX(0);
-}
-
-.sidebar-item a {
-    color: #FFFFFF;        
-    text-decoration: none; 
-  }
-
-/*#overlay {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0,0,0,.4);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}*/
-
-.sidebar-item:hover {
-  background: rgba(255,255,255,0.1); 
-}
-
-.topbanner {
-  position: relative;
-  z-index: 3;
 }

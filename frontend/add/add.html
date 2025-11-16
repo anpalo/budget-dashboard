@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Update Budget</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="add.css">  
+    <link rel="stylesheet" href="../sidebar/sidebar.css">
+</head>
+
+<body>
+    <div id="sidebar-container"></div>
+
+    <h2>Update Budget</h2>
+    <form id="BudgetForm">
+        <div id="rows-container">
+        <label>Expense Date:</label>
+        <input type="date" name="expense_date" id="expense_date">
+        <label>Category:</label>
+        <select name="category" id="category">
+            <option value="" disabled selected>Select Category</option>
+            <option value="Gift/Grant">Gift / Grant</option>
+            <option value="Development">Development</option>
+            <option value="Investment">Investment</option>
+            <option value="Vacation/Entertainment">Vacation / Entertainment</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Meal/Socialization">Meal / Socialization</option>
+        </select>
+        <label>Amout:</label>
+        <input type="text" name="amount" id="amount">
+        <label>Comment:</label>
+        <textarea class="comment" id="comment" placeholder="Add a comment..."></textarea>    </form>
+    </div>
+    <div id="add-row-button-container">
+        <button id="add-row-button"> + Add Expense </button>
+    </div>
+    <script src="../sidebar/sidebar.js"></script>
+</body>
+
+</html>
+

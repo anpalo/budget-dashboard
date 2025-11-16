@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">  
+<link rel="stylesheet" href="../sidebar/sidebar.css">
 
 </head>
 
@@ -66,7 +67,7 @@
 
 
 
-<script src="sidebar.js"></script>
+<script src="sidebar/sidebar.js"></script>
 
 
 
@@ -338,7 +339,7 @@ async function displayTotalSavings() {
   try {
       const res = await fetch("/api/total-savings");
       const data = await res.json();
-      const krw = Number(data.krw);
+      const krw = Number(data.total_savings);
       const usdRate = (await (await fetch("/api/currency")).json())["USD"] || 0;
       const usd = krw * usdRate;
 
@@ -609,41 +610,42 @@ monthListSpans.forEach(span => {
 
 
 function initCyclingPie(month) {
-const categories = monthlyData[month].Totals.map(e => e.Category);
-const totals = monthlyData[month].Totals.map(e => e.Total);
-const totalSum = totals.reduce((a,b) => a+b, 0);
-pieIndex = 0;
+  const totalsData = [...monthlyData[month].Totals].sort((a, b) => b.Total - a.Total);
+  const categories = monthlyData[month].Totals.map(e => e.Category);
+  const totals = monthlyData[month].Totals.map(e => e.Total);
+  const totalSum = totals.reduce((a,b) => a+b, 0);
+  pieIndex = 0;
 
-if(cycleChart) cycleChart.destroy();
+  if(cycleChart) cycleChart.destroy();
 
-const ctx = document.getElementById("widgetPie").getContext("2d");
+  const ctx = document.getElementById("widgetPie").getContext("2d");
 
-const centerText = {
-  id: 'centerText',
-  afterDraw(chart) {
-    const { ctx, chartArea:{width,height} } = chart;
-    ctx.save();
-    const cx = width/2+10, cy = height/2;
-    ctx.textAlign = "center"; ctx.textBaseline="middle";
+  const centerText = {
+    id: 'centerText',
+    afterDraw(chart) {
+      const { ctx, chartArea:{width,height} } = chart;
+      ctx.save();
+      const cx = width/2+10, cy = height/2;
+      ctx.textAlign = "center"; ctx.textBaseline="middle";
 
-    //month name
-    ctx.font = "bold 20px Saira";
-    ctx.fillStyle = monthColorMap[currentMonth].hover;
-    ctx.fillText(monthNames[currentMonth], cx-10, cy-50);
+      //month name
+      ctx.font = "bold 20px Saira";
+      ctx.fillStyle = monthColorMap[currentMonth].hover;
+      ctx.fillText(monthNames[currentMonth], cx-10, cy-50);
 
-    //category name
-    ctx.font = "bold 18px Saira"; ctx.fillStyle = "#FFFFFF";
-    ctx.fillText(categories[pieIndex], cx-10, cy-20);
+      //category name
+      ctx.font = "bold 18px Saira"; ctx.fillStyle = "#FFFFFF";
+      ctx.fillText(categories[pieIndex], cx-10, cy-20);
 
-    //percentage
-    ctx.font = "bold 24px Saira";
-    const pct = ((totals[pieIndex]/totalSum)*100).toFixed(1);
-    ctx.fillText(`${pct}%`, cx-5, cy+10);
+      //percentage
+      ctx.font = "bold 24px Saira";
+      const pct = ((totals[pieIndex]/totalSum)*100).toFixed(1);
+      ctx.fillText(`${pct}%`, cx-5, cy+10);
 
-    //amount
-    ctx.font = "12px Saira"; ctx.fillStyle = categoryColorMap[categories[pieIndex]];
-    ctx.fillText(`${totals[pieIndex].toLocaleString('ko-KR')}원`, cx-10, cy+40);
-    ctx.restore();
+      //amount
+      ctx.font = "12px Saira"; ctx.fillStyle = categoryColorMap[categories[pieIndex]];
+      ctx.fillText(`${totals[pieIndex].toLocaleString('ko-KR')}원`, cx-10, cy+40);
+      ctx.restore();
   }
 };
 

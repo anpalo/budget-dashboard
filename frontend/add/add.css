@@ -1,0 +1,45 @@
+/* add.html */
+body {
+  background-image: url('../images/dark_background.jpg');
+  background-size: cover;
+  min-height: 99vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0E1319;       /* backup 0E1319*/
+  color: #ffffff;
+  font-family: "Saira", sans-serif;
+  margin: 1px;
+  transition: background-image 0.5s ease-in-out;
+}
+
+textarea.comment {
+  font-family: "Saira", sans-serif;
+  width: 400px;
+  height: 15px;
+  padding: 5px;
+  font-size: 12px;
+  overflow-y: auto;
+  resize: vertical; 
+}
+
+h2 {
+  color: #FFFFFF;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  display: flex;
+  gap: 1em;
+}
+
+
+
+#add-row-button-container {
+  padding-top: 15px;
+}
+
+#add-row-button {
+    font-family: "Saira", sans-serif; 
+    font-size: 14px;
+    font-weight: normal;
+}
+
